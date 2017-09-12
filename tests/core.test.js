@@ -119,7 +119,7 @@ describe('bbop-manager-sparql simple', function(){
 
 describe('bbop-manager-sparql template calls', function(){
 
-    it('trying wikidata, prefixes', function(done){
+    it('trying wikidata, query prefixes', function(done){
 
 	// Bring in YAML example.
 	var inyml = fs.readFileSync('examples/template-01.yaml').toString();
@@ -142,7 +142,7 @@ describe('bbop-manager-sparql template calls', function(){
 	}).done();
     });
 
-    it('trying wikidata, no prefixes', function(done){
+    it('trying wikidata, object prefixes', function(done){
 
 	// Bring in YAML example.
 	var inyml = fs.readFileSync('examples/template-02.yaml').toString();
@@ -154,6 +154,29 @@ describe('bbop-manager-sparql template calls', function(){
     	var m = new manager(wikidata,
 			    [['wd', '<http://www.wikidata.org/entity/>'],
 			     ['wdt', '<http://www.wikidata.org/prop/direct/>']],
+			    response_json,
+			    engine_to_use,
+			    'async');
+	
+	m.template(inyml, {pmid: '999'}).then(function(resp){
+	    //console.log('resp',resp);
+    	    assert.isDefined(resp.raw()['head'], 'has json head');
+    	    assert.isDefined(resp.raw()['results'], 'has json results');
+    	    done();
+	}).done();
+    });
+
+    it('trying wikidata, yaml prefixes', function(done){
+
+	// Bring in YAML example.
+	var inyml = fs.readFileSync('examples/template-03.yaml').toString();
+	
+	var engine_to_use = new node_engine(response_json);
+	engine_to_use.headers([['accept', 'application/sparql-results+json']]);
+	
+    	// No action, so it doesn't matter what we use.
+    	var m = new manager(wikidata,
+			    [],
 			    response_json,
 			    engine_to_use,
 			    'async');
