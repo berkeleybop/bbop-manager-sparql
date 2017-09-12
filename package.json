@@ -1,6 +1,6 @@
 {
     "name": "bbop-manager-sparql",
-    "version": "0.0.1",
+    "version": "0.0.3",
     "license": "BSD-3-Clause",
     "description": "Manager for handling communication and callbacks with a SPARQL endpoint; also allows for use of templates.",
     "keywords": [
@@ -30,7 +30,7 @@
         "bbop-rest-response": "0.0.4",
         "domino": "1.0.19",
         "jquery": "2.1.4",
-	"mustache": "2.3.0",
+        "mustache": "2.3.0",
         "underscore": "1.8.3",
         "xmlhttprequest": "1.7.0"
     },
@@ -48,7 +48,7 @@
         "gulp-uglify": "1.2.0",
         "jsdoc": "3.3.0",
         "jsdoc-baseline": "git://github.com/hegemonic/jsdoc-baseline.git#74d1dc8075",
-	"yamljs": "0.2.8"
+        "yamljs": "0.2.8"
     },
     "bundleDependencies": [],
     "private": false,
