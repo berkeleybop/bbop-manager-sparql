@@ -23,9 +23,13 @@ describe('our testing environment is sane', function(){
     });
 
     // Can I pull in things as expected from node_modules, etc.?
-    it('I can see bbop-rest-manager from my porch', function(){
-	var model = require('..');
-	assert.typeOf(model, 'function');
+    it('I can see bbop-manager-sparql from my porch', function(){
+	var manager = require('..').base;
+	assert.typeOf(manager, 'function');
+    });
+    it('I can make bbop-manager-sparql from my porch', function(){
+	var manager = require('..').base;
+	assert.typeOf((new manager()), 'object');
     });
     
     // Post-run.
