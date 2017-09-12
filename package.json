@@ -30,6 +30,7 @@
         "bbop-rest-response": "0.0.4",
         "domino": "1.0.19",
         "jquery": "2.1.4",
+	"mustache": "2.3.0",
         "underscore": "1.8.3",
         "xmlhttprequest": "1.7.0"
     },
@@ -46,7 +47,8 @@
         "gulp-shell": "0.4.2",
         "gulp-uglify": "1.2.0",
         "jsdoc": "3.3.0",
-        "jsdoc-baseline": "git://github.com/hegemonic/jsdoc-baseline.git#74d1dc8075"
+        "jsdoc-baseline": "git://github.com/hegemonic/jsdoc-baseline.git#74d1dc8075",
+	"yamljs": "0.2.8"
     },
     "bundleDependencies": [],
     "private": false,

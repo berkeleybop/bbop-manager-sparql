@@ -7,6 +7,10 @@ chai.config.includeStack = true;
 var assert = chai.assert;
 var manager = require('..');
 
+// For templates tests.
+var fs = require("fs");
+var yaml = require('yamljs');
+
 var us = require('underscore');
 var each = us.each;
 
@@ -69,7 +73,7 @@ describe('bbop-manager-sparql inner ops', function(){
 
 describe('bbop-manager-sparql simple', function(){
 
-    it('trying wikidata', function(done){
+    it('trying wikidata, all in', function(done){
 
 	var engine_to_use = new node_engine(response_json);
 	engine_to_use.headers([['accept', 'application/sparql-results+json']]);
@@ -89,20 +93,77 @@ describe('bbop-manager-sparql simple', function(){
 	}).done();
     });
 
-    // it('trying the basic prefix ops', function(){
+    it('trying wikidata, prefixes', function(done){
 
-    // 	var engine_to_use = new node_engine(response_json);
+	var engine_to_use = new node_engine(response_json);
+	engine_to_use.headers([['accept', 'application/sparql-results+json']]);
+	
+    	// No action, so it doesn't matter what we use.
+    	var m = new manager(wikidata,
+			    [['wd', '<http://www.wikidata.org/entity/>'],
+			     ['wdt', '<http://www.wikidata.org/prop/direct/>']],
+			    response_json,
+			    engine_to_use,
+			    'async');
 
-    // 	// No action, so it doesn't matter what we use.
-    // 	var m = new manager(wikidata, [['fb', 'foo:bar']], response_base,
-    // 			   engine_to_use);
+	m.query(wikiquery_sans).then(function(resp){
+	    //console.log('resp',resp);
+    	    assert.isDefined(resp.raw()['head'], 'has json head');
+    	    assert.isDefined(resp.raw()['results'], 'has json results');
+    	    done();
+	}).done();
+    });
 
-    // 	// Init.
-    // 	assert.equal(m.prefixes().length, 1, 'simple: prefixes are (a)');
-    // 	assert.equal(m.prefixes()[0][1], 'foo:bar', 'simple: prefixes are (b)');
+});
 
-    // 	// Add.
-    // 	m.add_prefix('a', 'b');
-    // 	assert.equal(m.prefixes()[1][1], 'b', 'simple: add prefix');
-    // });
+
+describe('bbop-manager-sparql template calls', function(){
+
+    it('trying wikidata, prefixes', function(done){
+
+	// Bring in YAML example.
+	var inyml = fs.readFileSync('examples/template-01.yaml').toString();
+	
+	var engine_to_use = new node_engine(response_json);
+	engine_to_use.headers([['accept', 'application/sparql-results+json']]);
+	
+    	// No action, so it doesn't matter what we use.
+    	var m = new manager(wikidata,
+			    [],
+			    response_json,
+			    engine_to_use,
+			    'async');
+	
+	m.template(inyml, {pmid: '999'}).then(function(resp){
+	    //console.log('resp',resp);
+    	    assert.isDefined(resp.raw()['head'], 'has json head');
+    	    assert.isDefined(resp.raw()['results'], 'has json results');
+    	    done();
+	}).done();
+    });
+
+    it('trying wikidata, no prefixes', function(done){
+
+	// Bring in YAML example.
+	var inyml = fs.readFileSync('examples/template-02.yaml').toString();
+	
+	var engine_to_use = new node_engine(response_json);
+	engine_to_use.headers([['accept', 'application/sparql-results+json']]);
+	
+    	// No action, so it doesn't matter what we use.
+    	var m = new manager(wikidata,
+			    [['wd', '<http://www.wikidata.org/entity/>'],
+			     ['wdt', '<http://www.wikidata.org/prop/direct/>']],
+			    response_json,
+			    engine_to_use,
+			    'async');
+	
+	m.template(inyml, {pmid: '999'}).then(function(resp){
+	    //console.log('resp',resp);
+    	    assert.isDefined(resp.raw()['head'], 'has json head');
+    	    assert.isDefined(resp.raw()['results'], 'has json results');
+    	    done();
+	}).done();
+    });
+
 });
