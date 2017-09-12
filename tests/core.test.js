@@ -5,20 +5,23 @@
 var chai = require('chai');
 chai.config.includeStack = true;
 var assert = chai.assert;
-var manager_base = require('..').base;
+var manager = require('..');
 
 var us = require('underscore');
 var each = us.each;
 
-// var manager_base = managers.base;
-// var manager_node = managers.node;
-// var manager_sync_request = managers.sync_request;
-// var manager_jquery = managers.jquery;
-
 // Correct environment, ready testing.
 var bbop = require('bbop-core');
+
 var response_base = require('bbop-rest-response').base;
 var response_json = require('bbop-rest-response').json;
+
+// The likely main scripting engine.
+var sync_engine = require('bbop-rest-manager').sync_request;
+// The likely main browser engine.
+var jquery_engine = require('bbop-rest-manager').jquery;
+// Everybody else engine.
+var node_engine = require('bbop-rest-manager').node;
 
 var wikidata = 'https://query.wikidata.org/sparql';
 
@@ -30,19 +33,25 @@ describe('bbop-manager-sparql inner ops', function(){
 
     it('trying the basic endpoint ops', function(){
 
-	// No action, so it doesn't matter what we use.
-	var m = new manager_base(wikidata, response_base, [['fb', 'foo:bar']]);
+	var engine_to_use = new node_engine(response_json);
 
-	assert.equal(m.endpoint(), wikidata, 'simple: has endpoint');
+    	// No action, so it doesn't matter what we use.
+    	var m = new manager(wikidata, [['fb', 'foo:bar']], response_base,
+			    engine_to_use, null);
 
-	m.endpoint('foo');
-	assert.equal(m.endpoint(), 'foo', 'simple: changed endpoint');
+    	assert.equal(m.endpoint(), wikidata, 'simple: has endpoint');
+
+    	m.endpoint('foo');
+    	assert.equal(m.endpoint(), 'foo', 'simple: changed endpoint');
     });
 
     it('trying the basic prefix ops', function(){
 
+	var engine_to_use = new node_engine(response_json);
+
 	// No action, so it doesn't matter what we use.
-	var m = new manager_base(wikidata, response_base, [['fb', 'foo:bar']]);
+	var m = new manager(wikidata, [['fb', 'foo:bar']], response_base,
+			   engine_to_use);
 
 	// Init.
     	assert.equal(m.prefixes().length, 1, 'simple: prefixes are (a)');

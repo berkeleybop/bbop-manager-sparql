@@ -26,7 +26,7 @@
     "dependencies": {
         "bbop-core": "0.0.5",
         "bbop-registry": "0.0.3",
-        "bbop-rest-manager": "0.0.10",
+        "bbop-rest-manager": "0.0.16",
         "bbop-rest-response": "0.0.4",
         "domino": "1.0.19",
         "jquery": "2.1.4",
