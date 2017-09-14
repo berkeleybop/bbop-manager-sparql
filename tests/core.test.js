@@ -190,3 +190,45 @@ describe('bbop-manager-sparql template calls', function(){
     });
 
 });
+
+describe('bbop-manager-sparql jQuery POST calls', function(){
+
+    var mock_jQuery = null;
+    before(function(){
+	// Modify the manager into functioning--will need this to get
+	// tests working for jQuery in this environment.
+	var domino = require('domino');
+	mock_jQuery = require('jquery')(domino.createWindow());
+	var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+	mock_jQuery.support.cors = true;
+	mock_jQuery.ajaxSettings.xhr = function() {
+	    return new XMLHttpRequest();
+	};
+    });
+
+    it('trying wikidata with template', function(done){
+
+	// Bring in YAML example.
+	var inyml = fs.readFileSync('examples/template-03.yaml').toString();
+
+	// Goose jQuery into functioning here.
+    	var engine_to_use = new jquery_engine(response_json);
+	engine_to_use.JQ = mock_jQuery;
+	engine_to_use.headers([['accept', 'application/sparql-results+json']]);
+	
+    	// No action, so it doesn't matter what we use.
+    	var m = new manager(wikidata,
+			    [],
+			    response_json,
+			    engine_to_use,
+			    'async');
+	
+	m.template(inyml, {pmid: '999'}).then(function(resp){
+	    //console.log('resp',resp);
+    	    assert.isDefined(resp.raw()['head'], 'has json head');
+    	    assert.isDefined(resp.raw()['results'], 'has json results');
+    	    done();
+	}).done();
+    });
+
+});
