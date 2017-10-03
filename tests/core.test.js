@@ -253,4 +253,40 @@ describe('bbop-manager-sparql for just templating', function(){
 	done();
     });
 
+    it('trying getting a string with template, different yaml', function(done){
+
+	// Bring in YAML example.
+	var inyml = fs.readFileSync('examples/template-04.yaml').toString();
+
+    	// No action, so it doesn't matter what we use.
+    	var m = new manager();
+	
+	var str = m.template(inyml, {pmid: '999'});
+
+	//console.log(str);
+    	assert.equal(str,
+		     'PREFIX wd:<http://www.wikidata.org/entity/> PREFIX wdt:<http://www.wikidata.org/prop/direct/> SELECT ?rtcl ?title ?author ?journal ?date\nWHERE\n{\n  ?rtcl wdt:P698 "999".\n  OPTIONAL { ?rtcl wdt:P1476 ?title. }\n  OPTIONAL { ?rtcl wdt:P2093 ?author. }\n  OPTIONAL { ?rtcl wdt:P1433 ?journal. }\n  OPTIONAL { ?rtcl wdt:P577 ?date. }\n}\n',
+		     'same string');
+	
+	done();
+    });
+
+    it('trying getting a string with template, resolve vars', function(done){
+
+	// Bring in YAML example.
+	var inyml = fs.readFileSync('examples/template-05.yaml').toString();
+
+    	// No action, so it doesn't matter what we use.
+    	var m = new manager();
+	
+	var str = m.template(inyml, {'model_id': 'gomodel:123'});
+
+	//console.log(str);
+    	assert.equal(str,
+		     'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX gomodel: <http://model.geneontology.org/#>\nSELECT * WHERE {\n  GRAPH { gomodel:123\n    ?sub ?pred ?obj .\n  }\n}\nLIMIT 20\n',
+		     'same string');
+	
+	done();
+    });
+
 });
